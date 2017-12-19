@@ -1,5 +1,6 @@
 package com.revature.ers.ui;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -89,6 +90,7 @@ public class ERSManagerViewFrame implements ERSFrame, ActionListener, ItemListen
         managerViewPanel.add(logoutButton);
         managerViewFrame.add(managerViewPanel);
 
+        managerViewFrame.setPreferredSize(new Dimension(400, 400));
         managerViewFrame.pack();
         managerViewFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

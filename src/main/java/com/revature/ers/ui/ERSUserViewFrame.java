@@ -1,5 +1,6 @@
 package com.revature.ers.ui;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,8 +24,6 @@ import com.revature.ers.beans.Reimbursement;
 import com.revature.ers.beans.ReimbursementStatus;
 import com.revature.ers.dao.EmployeeDAO;
 import com.revature.ers.dao.ReimbursementDAO;
-
-import oracle.net.aso.b;
 
 public class ERSUserViewFrame implements ERSFrame, ActionListener, ItemListener {
     private static final String MAKE_NEW_REIMBURSEMENT = "New Reimbursement Request";
@@ -121,6 +120,7 @@ public class ERSUserViewFrame implements ERSFrame, ActionListener, ItemListener 
         userViewPanel.add(logoutButton);
         userViewFrame.add(userViewPanel);
         
+        userViewFrame.setPreferredSize(new Dimension(600, 600));
         userViewFrame.pack();
         userViewFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

@@ -1,5 +1,6 @@
 package com.revature.ers.ui;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -50,6 +51,7 @@ public class ERSCreateAccountFrame implements ERSFrame, ActionListener {
         createAccountPanel.add(nextButton);
         createAccountFrame.add(createAccountPanel);
 
+        createAccountFrame.setPreferredSize(new Dimension(600, 200));
         createAccountFrame.pack();
         createAccountFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

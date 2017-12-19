@@ -1,5 +1,6 @@
 package com.revature.ers.ui;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,6 +49,7 @@ public class ERSLoginFrame implements ERSFrame, ActionListener {
         loginPanel.add(loginButton);
         loginFrame.add(loginPanel);
 
+        loginFrame.setPreferredSize(new Dimension(600, 200));
         loginFrame.pack();
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
