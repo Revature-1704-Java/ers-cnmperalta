@@ -9,12 +9,17 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.revature.ers.dao.EmployeeDAO;
+import com.revature.ers.dao.ReimbursementDAO;
+
 public class ERSInitialFrame implements ERSFrame, ActionListener {
     private static ERSInitialFrame instance;
     private JFrame initialFrame;
     private JPanel initialPanel;
     private JButton createAccountButton;
     private JButton loginButton;
+    private EmployeeDAO employeeDAO;
+    private ReimbursementDAO reimbursementDAO;
 
     private ERSInitialFrame() {
         initialFrame = new JFrame("Expense Reimbursement System");
@@ -44,9 +49,34 @@ public class ERSInitialFrame implements ERSFrame, ActionListener {
         initialFrame.setVisible(false);
     }
 
+    /**
+     * @param employeeDAO the employeeDAO to set
+     */
+    public void setEmployeeDAO(EmployeeDAO employeeDAO) {
+        this.employeeDAO = employeeDAO;
+    }
+
+    /**
+     * @param reimbursementDAO the reimbursementDAO to set
+     */
+    public void setReimbursementDAO(ReimbursementDAO reimbursementDAO) {
+        this.reimbursementDAO = reimbursementDAO;
+    }
+
     public static ERSInitialFrame getInstance() {
         if(instance == null)
             instance = new ERSInitialFrame();
+
+        return instance;
+    }
+
+    public static ERSInitialFrame getInstance(EmployeeDAO edao, ReimbursementDAO rdao) {
+        if(instance == null) {
+            instance = new ERSInitialFrame();
+            instance.setEmployeeDAO(edao);
+            instance.setReimbursementDAO(rdao);       
+        }
+
         return instance;
     }
 
@@ -54,10 +84,10 @@ public class ERSInitialFrame implements ERSFrame, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(loginButton)) {
             this.hideFrame();
-            ERSLoginFrame.getInstance().showFrame();
+            ERSLoginFrame.getInstance(employeeDAO, reimbursementDAO).showFrame();
         } else if(e.getSource().equals(createAccountButton)) {
             this.hideFrame();
-            ERSCreateAccountFrame.getInstance().showFrame();
+            ERSCreateAccountFrame.getInstance(employeeDAO, reimbursementDAO).showFrame();
         }
     }
 }

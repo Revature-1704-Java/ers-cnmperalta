@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 
 import com.revature.ers.beans.Employee;
 import com.revature.ers.dao.EmployeeDAO;
+import com.revature.ers.dao.ReimbursementDAO;
 
 public class ERSCreateAccountFrame implements ERSFrame, ActionListener {
     private static ERSCreateAccountFrame instance;
@@ -27,6 +28,7 @@ public class ERSCreateAccountFrame implements ERSFrame, ActionListener {
     private JButton nextButton;
     private JButton createAccountButton;
     private EmployeeDAO employeeDAO;
+    private ReimbursementDAO reimbursementDAO;
     private Employee employee;
 
     private ERSCreateAccountFrame() {
@@ -38,7 +40,6 @@ public class ERSCreateAccountFrame implements ERSFrame, ActionListener {
         passwordField = new JPasswordField();
         nextButton = new JButton("Next");
         createAccountButton = new JButton("Create Account");
-        employeeDAO = new EmployeeDAO();
         initialize();
     }
 
@@ -69,6 +70,28 @@ public class ERSCreateAccountFrame implements ERSFrame, ActionListener {
         createAccountFrame.setVisible(false);
     }
 
+    /**
+     * @param employeeDAO the employeeDAO to set
+     */
+    public void setEmployeeDAO(EmployeeDAO employeeDAO) {
+        this.employeeDAO = employeeDAO;
+    }
+
+    /**
+     * @param reimbursementDAO the reimbursementDAO to set
+     */
+    public void setReimbursementDAO(ReimbursementDAO reimbursementDAO) {
+        this.reimbursementDAO = reimbursementDAO;
+    }
+
+    public static ERSCreateAccountFrame getInstance(EmployeeDAO edao, ReimbursementDAO rdao) {
+        if (instance == null) {
+            instance = new ERSCreateAccountFrame();
+            instance.setEmployeeDAO(edao);
+            instance.setReimbursementDAO(rdao);
+        }
+        return instance;
+    }
 
     public static ERSCreateAccountFrame getInstance() {
         if (instance == null)
@@ -97,22 +120,24 @@ public class ERSCreateAccountFrame implements ERSFrame, ActionListener {
             createAccountPanel.removeAll();
             createAccountPanel.add(emaiLLabel);
             createAccountPanel.add(emailTextField);
-            createAccountPanel.add(createAccountButton);
+            createAccountPanel.add(nextButton);
             createAccountFrame.pack();
             createAccountFrame.repaint();
             
             employeeDAO.updateEmployeePassword(employee.getEmployeeId(), passwordField.getText());
 
             if(employee.getEmployeeType().equalsIgnoreCase("Normal")) {
-                ERSUserViewFrame.getInstance().setEmployeeByEmailAddress(employee.getEmailAddress());
+                ERSUserViewFrame userView = ERSUserViewFrame.getInstance(employeeDAO, reimbursementDAO);
+                userView.setEmployeeByEmailAddress(employee.getEmailAddress());
                 clearLoginForm();
                 this.hideFrame();
-                ERSUserViewFrame.getInstance().showFrame();
+                userView.showFrame();
             } else if(employee.getEmployeeType().equalsIgnoreCase("Manager")) {
-                ERSManagerViewFrame.getInstance().setEmployeeByEmailAddress(employee.getEmailAddress());
+                ERSManagerViewFrame managerView = ERSManagerViewFrame.getInstance(employeeDAO, reimbursementDAO);
+                managerView.setEmployeeByEmailAddress(employee.getEmailAddress());
                 clearLoginForm();
                 this.hideFrame();
-                ERSManagerViewFrame.getInstance().showFrame();
+                managerView.showFrame();
             }
         }
     }

@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 
 import com.revature.ers.beans.Employee;
 import com.revature.ers.dao.EmployeeDAO;
+import com.revature.ers.dao.ReimbursementDAO;
 
 public class ERSLoginFrame implements ERSFrame, ActionListener {
     private static ERSLoginFrame instance;
@@ -26,6 +27,7 @@ public class ERSLoginFrame implements ERSFrame, ActionListener {
     private JPasswordField passwordField;
     private JButton loginButton;
     private EmployeeDAO employeeDAO;
+    private ReimbursementDAO reimbursementDAO;
 
     private ERSLoginFrame() {
         loginFrame = new JFrame("User Login");
@@ -35,7 +37,6 @@ public class ERSLoginFrame implements ERSFrame, ActionListener {
         emailTextField = new JTextField();
         passwordField = new JPasswordField();
         loginButton = new JButton("Login");
-        employeeDAO = new EmployeeDAO();
         initialize();
     }
 
@@ -66,10 +67,32 @@ public class ERSLoginFrame implements ERSFrame, ActionListener {
         loginFrame.setVisible(false);
     }
 
+    /**
+     * @param employeeDAO the employeeDAO to set
+     */
+    public void setEmployeeDAO(EmployeeDAO employeeDAO) {
+        this.employeeDAO = employeeDAO;
+    }
+
+    /**
+     * @param reimbursementDAO the reimbursementDAO to set
+     */
+    public void setReimbursementDAO(ReimbursementDAO reimbursementDAO) {
+        this.reimbursementDAO = reimbursementDAO;
+    }
 
     public static ERSLoginFrame getInstance() {
-        if (instance == null)
+        if(instance == null)
             instance = new ERSLoginFrame();
+        return instance;
+    }
+
+    public static ERSLoginFrame getInstance(EmployeeDAO edao, ReimbursementDAO rdao) {
+        if (instance == null) {
+            instance = new ERSLoginFrame();
+            instance.setEmployeeDAO(edao);
+            instance.setReimbursementDAO(rdao);
+        }
         return instance;
     }
 
@@ -87,13 +110,15 @@ public class ERSLoginFrame implements ERSFrame, ActionListener {
                 return;
             } else if (employee.getPassword() != null && employee.getPassword().equals(passwordField.getText())) {
                 if(employee.getEmployeeType().equalsIgnoreCase("Normal")) {                
-                    ERSUserViewFrame.getInstance().setEmployeeByEmailAddress(employee.getEmailAddress());
+                    ERSUserViewFrame userView = ERSUserViewFrame.getInstance(employeeDAO, reimbursementDAO);
+                    userView.setEmployeeByEmailAddress(employee.getEmailAddress());
                     this.hideFrame();
-                    ERSUserViewFrame.getInstance().showFrame();
+                    userView.showFrame();
                 } else if(employee.getEmployeeType().equalsIgnoreCase("Manager")) {
-                    ERSManagerViewFrame.getInstance().setEmployeeByEmailAddress(employee.getEmailAddress());
+                    ERSManagerViewFrame managerView = ERSManagerViewFrame.getInstance(employeeDAO, reimbursementDAO);
+                    managerView.setEmployeeByEmailAddress(employee.getEmailAddress());
                     this.hideFrame();
-                    ERSManagerViewFrame.getInstance().showFrame();
+                    managerView.showFrame();
                 }    
             } else {
                 JOptionPane.showMessageDialog(loginFrame, "Invalid password.");

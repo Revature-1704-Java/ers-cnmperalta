@@ -83,8 +83,6 @@ public class ERSUserViewFrame implements ERSFrame, ActionListener, ItemListener 
         justification = new JLabel();
         status = new JLabel();
         logoutButton = new JButton("Logout");
-        employeeDAO = new EmployeeDAO();
-        reimbursementDAO = new ReimbursementDAO();
         initialize();
     }
 
@@ -176,9 +174,32 @@ public class ERSUserViewFrame implements ERSFrame, ActionListener, ItemListener 
         userViewFrame.setVisible(false);
     }
 
+    /**
+     * @param employeeDAO the employeeDAO to set
+     */
+    public void setEmployeeDAO(EmployeeDAO employeeDAO) {
+        this.employeeDAO = employeeDAO;
+    }
+
+    /**
+     * @param reimbursementDAO the reimbursementDAO to set
+     */
+    public void setReimbursementDAO(ReimbursementDAO reimbursementDAO) {
+        this.reimbursementDAO = reimbursementDAO;
+    }
+
     public static ERSUserViewFrame getInstance() {
         if(instance == null)
             instance = new ERSUserViewFrame();
+        return instance;
+    }
+
+    public static ERSUserViewFrame getInstance(EmployeeDAO edao, ReimbursementDAO rdao) {
+        if(instance == null) {
+            instance = new ERSUserViewFrame();
+            instance.setEmployeeDAO(edao);
+            instance.setReimbursementDAO(rdao);
+        }
         return instance;
     }
 

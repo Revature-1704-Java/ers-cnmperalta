@@ -63,8 +63,6 @@ public class ERSManagerViewFrame implements ERSFrame, ActionListener, ItemListen
         approveButton = new JButton("Approve");
         disapproveButton = new JButton("Disapprove");
         logoutButton = new JButton("Logout");
-        employeeDAO = new EmployeeDAO();
-        reimbursementDAO = new ReimbursementDAO();
         initialize();
     }
 
@@ -153,9 +151,32 @@ public class ERSManagerViewFrame implements ERSFrame, ActionListener, ItemListen
         updateManagerViewInformation();
     }
 
+    /**
+     * @param employeeDAO the employeeDAO to set
+     */
+    public void setEmployeeDAO(EmployeeDAO employeeDAO) {
+        this.employeeDAO = employeeDAO;
+    }
+
+    /**
+     * @param reimbursementDAO the reimbursementDAO to set
+     */
+    public void setReimbursementDAO(ReimbursementDAO reimbursementDAO) {
+        this.reimbursementDAO = reimbursementDAO;
+    }
+
     public static ERSManagerViewFrame getInstance() {
         if(instance == null)
             instance = new ERSManagerViewFrame();
+        return instance;
+    }
+
+    public static ERSManagerViewFrame getInstance(EmployeeDAO edao, ReimbursementDAO rdao) {
+        if(instance == null) {
+            instance = new ERSManagerViewFrame();
+            instance.setEmployeeDAO(edao);
+            instance.setReimbursementDAO(rdao);
+        }
         return instance;
     }
 
