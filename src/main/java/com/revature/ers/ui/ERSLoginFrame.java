@@ -7,9 +7,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import com.revature.ers.beans.Employee;
+import com.revature.ers.dao.EmployeeDAO;
 
 public class ERSLoginFrame implements ERSFrame, ActionListener {
     private static ERSLoginFrame instance;
@@ -20,6 +24,7 @@ public class ERSLoginFrame implements ERSFrame, ActionListener {
     private JTextField emailTextField;
     private JPasswordField passwordField;
     private JButton loginButton;
+    private EmployeeDAO employeeDAO;
 
     private ERSLoginFrame() {
         loginFrame = new JFrame("User Login");
@@ -29,6 +34,7 @@ public class ERSLoginFrame implements ERSFrame, ActionListener {
         emailTextField = new JTextField();
         passwordField = new JPasswordField();
         loginButton = new JButton("Login");
+        employeeDAO = new EmployeeDAO();
         initialize();
     }
 
@@ -43,6 +49,7 @@ public class ERSLoginFrame implements ERSFrame, ActionListener {
         loginFrame.add(loginPanel);
 
         loginFrame.pack();
+        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void showFrame() {
@@ -68,17 +75,28 @@ public class ERSLoginFrame implements ERSFrame, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(loginButton)) {
             // check username and password if correct
-            int employeeId = 1; // fetch this from database
-            String employeeType = "Normal"; // fetch this from database
-            if(employeeType.equalsIgnoreCase("Normal")) {
-                ERSUserViewFrame.getInstance().setEmployeeId(employeeId);
-                this.hideFrame();
-                ERSUserViewFrame.getInstance().showFrame();
-            } else if(employeeType.equalsIgnoreCase("Manager")) {
-                ERSManagerViewFrame.getInstance().setEmployeeId(employeeId);
-                this.hideFrame();
-                ERSManagerViewFrame.getInstance().showFrame();
-            }
+            Employee employee = employeeDAO.getEmployeeByEmail(emailTextField.getText());
+
+            if(employee == null) {
+                JOptionPane.showMessageDialog(loginFrame, "Invalid email address.");
+                return;
+            } else if(employee.getPassword() == null) {
+                JOptionPane.showMessageDialog(loginFrame, "Create an account first.");
+                return;
+            } else if (employee.getPassword() != null && employee.getPassword().equals(passwordField.getText())) {
+                if(employee.getEmployeeType().equalsIgnoreCase("Normal")) {                
+                    ERSUserViewFrame.getInstance().setEmployeeByEmailAddress(employee.getEmailAddress());
+                    this.hideFrame();
+                    ERSUserViewFrame.getInstance().showFrame();
+                } else if(employee.getEmployeeType().equalsIgnoreCase("Manager")) {
+                    ERSManagerViewFrame.getInstance().setEmployeeByEmailAddress(employee.getEmailAddress());
+                    this.hideFrame();
+                    ERSManagerViewFrame.getInstance().showFrame();
+                }    
+            } else {
+                JOptionPane.showMessageDialog(loginFrame, "Invalid password.");
+                return;
+            } 
         }
     }
 }

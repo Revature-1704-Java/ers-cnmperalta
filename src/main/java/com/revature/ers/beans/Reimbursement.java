@@ -7,18 +7,26 @@ public class Reimbursement {
     private BigDecimal amount;
     private int employeeId;
     private int managerId;
-    private boolean approved;
-    private String reasons;
+    private String justification;
+    private ReimbursementStatus status;
 
-    public Reimbursement () {}
+    public Reimbursement() {}
 
-    public Reimbursement (int reimbursementId, BigDecimal amount, int employeeId, int managerId, boolean approved, String reasons) {
+    public Reimbursement(BigDecimal amount, int employeeId, int managerId, String justification, ReimbursementStatus status) {
+        this.amount = amount;
+        this.employeeId = employeeId;
+        this.managerId = managerId;
+        this.justification = justification;
+        this.status = status;
+    }
+
+    public Reimbursement (int reimbursementId, BigDecimal amount, int employeeId, int managerId, String justification, ReimbursementStatus status) {
         this.reimbursementId = reimbursementId;
         this.amount = amount;
         this.employeeId = employeeId;
         this.managerId = managerId;
-        this.approved = approved;
-        this.reasons = reasons;
+        this.justification = justification;
+        this.status = status;
     }
 
     /**
@@ -43,10 +51,17 @@ public class Reimbursement {
     }
 
     /**
-     * @return the reasons
+     * @return the justification
      */
-    public String getReasons() {
-        return reasons;
+    public String getJustification() {
+        return justification;
+    }
+
+    /**
+     * @return the status
+     */
+    public ReimbursementStatus getStatus() {
+        return status;
     }
 
     /**
@@ -64,10 +79,10 @@ public class Reimbursement {
     }
 
     /**
-     * @param approved the approved to set
+     * @param status the status to set
      */
-    public void setApproved(boolean approved) {
-        this.approved = approved;
+    public void setStatus(ReimbursementStatus status) {
+        this.status = status;
     }
 
     /**
@@ -85,10 +100,10 @@ public class Reimbursement {
     }
 
     /**
-     * @param reasons the reasons to set
+     * @param justification the justification to set
      */
-    public void setReasons(String reasons) {
-        this.reasons = reasons;
+    public void setJustification(String justification) {
+        this.justification = justification;
     }
 
     /**

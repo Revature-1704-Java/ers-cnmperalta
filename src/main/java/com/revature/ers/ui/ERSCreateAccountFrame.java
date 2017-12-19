@@ -7,9 +7,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import com.revature.ers.beans.Employee;
+import com.revature.ers.dao.EmployeeDAO;
 
 public class ERSCreateAccountFrame implements ERSFrame, ActionListener {
     private static ERSCreateAccountFrame instance;
@@ -21,6 +25,8 @@ public class ERSCreateAccountFrame implements ERSFrame, ActionListener {
     private JPasswordField passwordField;
     private JButton nextButton;
     private JButton createAccountButton;
+    private EmployeeDAO employeeDAO;
+    private Employee employee;
 
     private ERSCreateAccountFrame() {
         createAccountFrame = new JFrame("Create Account");
@@ -31,6 +37,7 @@ public class ERSCreateAccountFrame implements ERSFrame, ActionListener {
         passwordField = new JPasswordField();
         nextButton = new JButton("Next");
         createAccountButton = new JButton("Create Account");
+        employeeDAO = new EmployeeDAO();
         initialize();
     }
 
@@ -44,17 +51,19 @@ public class ERSCreateAccountFrame implements ERSFrame, ActionListener {
         createAccountFrame.add(createAccountPanel);
 
         createAccountFrame.pack();
+        createAccountFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private void clearLoginForm() {
+        emailTextField.setText("");
+        passwordField.setText("");
     }
 
     public void showFrame() {
-        emailTextField.setText("");
-        passwordField.setText("");
         createAccountFrame.setVisible(true);
     }
 
     public void hideFrame() {
-        emailTextField.setText("");
-        passwordField.setText("");
         createAccountFrame.setVisible(false);
     }
 
@@ -68,27 +77,41 @@ public class ERSCreateAccountFrame implements ERSFrame, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(nextButton)) {
+            employee = employeeDAO.getEmployeeByEmail(emailTextField.getText());
+            if(employee != null) {
+                createAccountPanel.removeAll();
+                createAccountPanel.add(passwordLabel);
+                createAccountPanel.add(passwordField);
+                createAccountPanel.add(createAccountButton);
+                createAccountFrame.pack();
+                createAccountFrame.repaint();
+            } else {
+                JOptionPane.showMessageDialog(createAccountFrame, "Invalid email address.");
+                return;
+            }
+            
+        } else if(e.getSource().equals(createAccountButton)) {
+            // get password and store it in database
             createAccountPanel.removeAll();
-            createAccountPanel.add(passwordLabel);
-            createAccountPanel.add(passwordField);
+            createAccountPanel.add(emaiLLabel);
+            createAccountPanel.add(emailTextField);
             createAccountPanel.add(createAccountButton);
             createAccountFrame.pack();
             createAccountFrame.repaint();
-        } else if(e.getSource().equals(createAccountButton)) {
-            // get password and store it in database
-            int employeeId = 1; // fetch this from database
-            String employeeType = "Manager";
+            
+            employeeDAO.updateEmployeePassword(employee.getEmployeeId(), passwordField.getText());
 
-            if(employeeType.equals("Normal")) {
-                ERSUserViewFrame.getInstance().setEmployeeId(employeeId);
+            if(employee.getEmployeeType().equalsIgnoreCase("Normal")) {
+                ERSUserViewFrame.getInstance().setEmployeeByEmailAddress(employee.getEmailAddress());
+                clearLoginForm();
                 this.hideFrame();
                 ERSUserViewFrame.getInstance().showFrame();
-            } else if(employeeType.equals("Manager")) {
-                ERSManagerViewFrame.getInstance().setEmployeeId(employeeId);
+            } else if(employee.getEmployeeType().equalsIgnoreCase("Manager")) {
+                ERSManagerViewFrame.getInstance().setEmployeeByEmailAddress(employee.getEmailAddress());
+                clearLoginForm();
                 this.hideFrame();
                 ERSManagerViewFrame.getInstance().showFrame();
             }
-            
         }
     }
 }

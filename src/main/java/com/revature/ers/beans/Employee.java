@@ -7,16 +7,18 @@ public class Employee {
     private int managerId;
     private String emailAddress;
     private String password;
+    private String employeeType;
 
     public Employee () {}
 
-    public Employee (int employeeId, String firstName, String lastName, int managerId, String emailAddress, String  password) {
+    public Employee (int employeeId, String firstName, String lastName, int managerId, String emailAddress, String  password, String employeeType) {
         this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.managerId = managerId;
         this.emailAddress = emailAddress;
         this.password = password;
+        this.employeeType = employeeType;
     }
 
     /**
@@ -62,6 +64,13 @@ public class Employee {
     }
 
     /**
+     * @return the employeeType
+     */
+    public String getEmployeeType() {
+        return employeeType;
+    }
+
+    /**
      * @param emailAddress the emailAddress to set
      */
     public void setEmailAddress(String emailAddress) {
@@ -101,5 +110,12 @@ public class Employee {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * @param employeeType the employeeType to set
+     */
+    public void setEmployeeType(String employeeType) {
+        this.employeeType = employeeType;
     }
 }

@@ -31,6 +31,7 @@ public class ERSInitialFrame implements ERSFrame, ActionListener {
         initialPanel.add(loginButton);
         initialFrame.add(initialPanel);
         initialFrame.pack();
+        initialFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void showFrame() {
@@ -50,11 +51,9 @@ public class ERSInitialFrame implements ERSFrame, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(loginButton)) {
-            System.out.println("Showing login frame.");
             this.hideFrame();
             ERSLoginFrame.getInstance().showFrame();
         } else if(e.getSource().equals(createAccountButton)) {
-            System.out.println("Showing create account frame.");
             this.hideFrame();
             ERSCreateAccountFrame.getInstance().showFrame();
         }
